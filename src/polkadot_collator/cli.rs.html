@@ -139,6 +139,10 @@
 <span id="139">139</span>
 <span id="140">140</span>
 <span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
 </pre><pre class="rust">
 <span class="comment">// Copyright 2019-2021 Parity Technologies (UK) Ltd.</span>
 <span class="comment">// This file is part of Cumulus.</span>
@@ -196,9 +200,6 @@
 	<span class="doccomment">/// The custom benchmark subcommmand benchmarking runtime pallets.</span>
 	<span class="attribute">#[<span class="ident">structopt</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;benchmark&quot;</span>, <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Benchmark runtime pallets.&quot;</span>)]</span>
 	<span class="ident">Benchmark</span>(<span class="ident">frame_benchmarking_cli::BenchmarkCmd</span>),
-
-	<span class="doccomment">/// Key management CLI utilities</span>
-	<span class="ident">Key</span>(<span class="ident">sc_cli::KeySubcommand</span>),
 }
 
 <span class="doccomment">/// Command for exporting the genesis state of the parachain</span>
@@ -277,8 +278,15 @@
 	) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
 		<span class="kw">let</span> <span class="ident">extension</span> <span class="op">=</span> <span class="ident">chain_spec::Extensions::try_get</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">para_config</span>.<span class="ident">chain_spec</span>);
 		<span class="kw">let</span> <span class="ident">chain_id</span> <span class="op">=</span> <span class="ident">extension</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">relay_chain</span>.<span class="ident">clone</span>());
-		<span class="kw">let</span> <span class="ident">base_path</span> <span class="op">=</span> <span class="ident">para_config</span>.<span class="ident">base_path</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">path</span>().<span class="ident">join</span>(<span class="string">&quot;polkadot&quot;</span>));
-		<span class="self">Self</span> { <span class="ident">base_path</span>, <span class="ident">chain_id</span>, <span class="ident">base</span>: <span class="ident">polkadot_cli::RunCmd::from_iter</span>(<span class="ident">relay_chain_args</span>) }
+		<span class="kw">let</span> <span class="ident">base_path</span> <span class="op">=</span> <span class="ident">para_config</span>
+			.<span class="ident">base_path</span>
+			.<span class="ident">as_ref</span>()
+			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">path</span>().<span class="ident">join</span>(<span class="string">&quot;polkadot&quot;</span>));
+		<span class="self">Self</span> {
+			<span class="ident">base_path</span>,
+			<span class="ident">chain_id</span>,
+			<span class="ident">base</span>: <span class="ident">polkadot_cli::RunCmd::from_iter</span>(<span class="ident">relay_chain_args</span>),
+		}
 	}
 }
 </pre></div>
