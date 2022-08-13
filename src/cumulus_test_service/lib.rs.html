@@ -852,16 +852,16 @@
 <span class="kw">use</span> <span class="ident">cumulus_relay_chain_interface</span>::{<span class="ident">RelayChainError</span>, <span class="ident">RelayChainInterface</span>, <span class="ident">RelayChainResult</span>};
 <span class="kw">use</span> <span class="ident">cumulus_relay_chain_rpc_interface</span>::{<span class="ident">create_client_and_start_worker</span>, <span class="ident">RelayChainRpcInterface</span>};
 <span class="kw">use</span> <span class="ident">cumulus_test_runtime</span>::{<span class="ident">Hash</span>, <span class="ident">Header</span>, <span class="ident">NodeBlock</span> <span class="kw">as</span> <span class="ident">Block</span>, <span class="ident">RuntimeApi</span>};
-<span class="kw">use</span> <span class="ident">parking_lot::Mutex</span>;
 
 <span class="kw">use</span> <span class="ident">frame_system_rpc_runtime_api::AccountNonceApi</span>;
 <span class="kw">use</span> <span class="ident">polkadot_primitives::v2</span>::{<span class="ident">CollatorPair</span>, <span class="ident">Hash</span> <span class="kw">as</span> <span class="ident">PHash</span>, <span class="ident">PersistedValidationData</span>};
 <span class="kw">use</span> <span class="ident">polkadot_service::ProvideRuntimeApi</span>;
 <span class="kw">use</span> <span class="ident">sc_client_api::execution_extensions::ExecutionStrategies</span>;
 <span class="kw">use</span> <span class="ident">sc_network</span>::{<span class="ident">config::TransportConfig</span>, <span class="ident">multiaddr</span>, <span class="ident">NetworkService</span>};
+<span class="kw">use</span> <span class="ident">sc_network_common::service</span>::{<span class="ident">NetworkBlock</span>, <span class="ident">NetworkStateInfo</span>};
 <span class="kw">use</span> <span class="ident">sc_service</span>::{
 	<span class="ident">config</span>::{
-		<span class="ident">DatabaseSource</span>, <span class="ident">KeepBlocks</span>, <span class="ident">KeystoreConfig</span>, <span class="ident">MultiaddrWithPeerId</span>, <span class="ident">NetworkConfiguration</span>,
+		<span class="ident">BlocksPruning</span>, <span class="ident">DatabaseSource</span>, <span class="ident">KeystoreConfig</span>, <span class="ident">MultiaddrWithPeerId</span>, <span class="ident">NetworkConfiguration</span>,
 		<span class="ident">OffchainWorkerConfig</span>, <span class="ident">PruningMode</span>, <span class="ident">WasmExecutionMethod</span>,
 	},
 	<span class="ident">BasePath</span>, <span class="ident">ChainSpec</span>, <span class="ident">Configuration</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">ServiceError</span>, <span class="ident">PartialComponents</span>, <span class="ident">Role</span>,
@@ -1013,7 +1013,7 @@
 	<span class="prelude-val">Ok</span>(<span class="ident">Arc::new</span>(<span class="ident">RelayChainInProcessInterface::new</span>(
 		<span class="ident">relay_chain_full_node</span>.<span class="ident">client</span>.<span class="ident">clone</span>(),
 		<span class="ident">relay_chain_full_node</span>.<span class="ident">backend</span>.<span class="ident">clone</span>(),
-		<span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="ident">Box::new</span>(<span class="ident">relay_chain_full_node</span>.<span class="ident">network</span>.<span class="ident">clone</span>()))),
+		<span class="ident">Arc::new</span>(<span class="ident">relay_chain_full_node</span>.<span class="ident">network</span>.<span class="ident">clone</span>()),
 		<span class="ident">relay_chain_full_node</span>.<span class="ident">overseer_handle</span>,
 	)) <span class="kw">as</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span>)
 }
@@ -1466,7 +1466,7 @@
 		<span class="ident">state_cache_size</span>: <span class="number">67108864</span>,
 		<span class="ident">state_cache_child_ratio</span>: <span class="prelude-val">None</span>,
 		<span class="ident">state_pruning</span>: <span class="prelude-val">Some</span>(<span class="ident">PruningMode::ArchiveAll</span>),
-		<span class="ident">keep_blocks</span>: <span class="ident">KeepBlocks::All</span>,
+		<span class="ident">blocks_pruning</span>: <span class="ident">BlocksPruning::All</span>,
 		<span class="ident">chain_spec</span>: <span class="ident">spec</span>,
 		<span class="ident">wasm_method</span>: <span class="ident">WasmExecutionMethod::Interpreted</span>,
 		<span class="comment">// NOTE: we enforce the use of the native runtime to make the errors more debuggable</span>
